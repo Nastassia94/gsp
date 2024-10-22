@@ -15,11 +15,13 @@ public class DocumentPageTests {
 
     @BeforeClass
     public void setup() {
-        // Указать путь к драйверу ChromeDriver
 
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
+        // Авторизация (если требуется)
+        AuthTest authTest = new AuthTest();
+        authTest.login();
         // Открыть страницу
         driver.get("https://staging.gsp.agsr.by/procedures/document");
     }
@@ -27,16 +29,16 @@ public class DocumentPageTests {
     @Test
     public void verifyPageTitle() {
         // автотест для проверки заголовка страницы
-        String expectedTitle = "Document Procedures - GSP";
+        String expectedTitle = "Административные процедуры";
         String actualTitle = driver.getTitle();
-        assert actualTitle.equals(expectedTitle) : "Title does not match!";
+        assert actualTitle.equals(expectedTitle) : "Административные процедуры";
     }
 
     @Test
     public void interactWithElements() {
         // XPath для взаимодействия с элементами страницы
 
-        // Найти элемент по XPath и кликнуть на него
+        // Находим ээлемент и кликаем на него
         WebElement searchField = driver.findElement(By.xpath("//input[@placeholder='Search']"));
         searchField.sendKeys("Sample document");
 
@@ -44,7 +46,7 @@ public class DocumentPageTests {
         WebElement searchButton = driver.findElement(By.xpath("//button[@type='submit']"));
         searchButton.click();
 
-        // Допустим, мы проверяем результат
+        // проверяем результат
         WebElement result = driver.findElement(By.xpath("//div[@class='result-item']"));
         assert result.isDisplayed() : "Result is not displayed!";
     }
