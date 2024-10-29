@@ -20,28 +20,38 @@ public class NewStatementPageTest {
     }
 
     @Test
-    public void testNewStatementCreation() {
+    public void testNewStatementCreation() throws InterruptedException {
+        driver.get("https://staging.gsp.agsr.by/statements");
 
-        WebElement newStatementButton = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[2]/button"));
+        WebElement newStatementButton = driver.findElement(By.xpath("//button[@class='btn edit btn-medium button__pencil']"));
         newStatementButton.click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(), 'Создание нового заявления')]")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[@class='modal__title']/div[contains(., 'Новое заявление')]")));
 
         // Поле "Номер АП" - выбор из выпадающего списка
-        WebElement apNumberDropdown = driver.findElement(By.xpath("//div[contains(@class, 'dropdown')]//div[@role='combobox']"));
-        Select apNumberSelect = new Select(apNumberDropdown);
-        apNumberSelect.selectByVisibleText("548.3.2.4");
+        WebElement apNumberField = driver.findElement(By.xpath("//div[@class='reversed__value-container css-hlgwow']"));
+        apNumberField.click();
+        Thread.sleep(5000);
+        WebElement option = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='reversed__single-value css-1dimb5e-singleValue'][@class='reversed__single-value css-1dimb5e-singleValue']")));
+        option.click();
 
-        // Поле "Код пакета" - ввод текста
+
+        // Поле "Код пакета"
         WebElement packageCodeInput = driver.findElement(By.id("packageNumber"));
         packageCodeInput.sendKeys("6e889bb2-e2a8-46bd-a230-3a8465f837c9");
 
-        // Поле "УНП заинтересованного лица" - ввод текста
+        // Поле "УНП заинтересованного лица"
         WebElement unpInput = driver.findElement(By.id("unpNumber"));
         unpInput.sendKeys("400237155");
 
-        // Клик по кнопке "Сохранить"
+        //Кнопка "Сохранить"
         WebElement saveButton = driver.findElement(By.xpath("//button[contains(@class, 'save-button')]//span"));
         saveButton.click();
+    }
+    @AfterAll
+    public static void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
